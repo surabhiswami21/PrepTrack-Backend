@@ -1,7 +1,5 @@
 package com.preptrack.preptrack_backend.config;
 
-
-
 import com.preptrack.preptrack_backend.security.JwtAuthenticationFilter;
 
 import org.springframework.context.annotation.Bean;
@@ -10,22 +8,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
-
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -56,6 +47,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 // CORS enable
+                // CORS configuration CorsConfig.java se aayegi
                 .cors(cors -> {})
 
                 // Session use nahi karni
@@ -67,9 +59,17 @@ public class SecurityConfig {
 
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint((request, response, exception) ->
-                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication required"))
+                                response.sendError(
+                                        HttpServletResponse.SC_UNAUTHORIZED,
+                                        "Authentication required"
+                                )
+                        )
                         .accessDeniedHandler((request, response, exception) ->
-                                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied"))
+                                response.sendError(
+                                        HttpServletResponse.SC_FORBIDDEN,
+                                        "Access denied"
+                                )
+                        )
                 )
 
                 .authorizeHttpRequests(auth -> auth
@@ -103,17 +103,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-                CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                configuration.setAllowCredentials(false);
-
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", configuration);
-                return source;
-        }
 }
